@@ -12,6 +12,9 @@ Use encryption if you want to protect your data and your privacy!
 I have also an Android version which uses the same files. Still working on meaningful combination instead of file copy or cloud sync.
 The Android app ist this: https://play.google.com/store/apps/details?id=groomiac.crocodilenote
 
+Binary release of THIS application (Windows user-friendly setup):
+https://github.com/Groomiac/CrocodileNote/releases
+
 
 
 CrocodileNote by Groomiac (https://groomiac.appspot.com)
