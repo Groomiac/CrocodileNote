@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html style="overflow-y: hidden; overflow-x: auto">
+<head>
+<meta http-equiv="x-ua-compatible" content="IE=9"/>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+
+<style type="text/css">
+*{
+padding:0;
+margin:0;
+font-family: Arial, Helvetica, Tahoma, sans-serif;
+font-size: 10pt;
+}
+
+input:focus, textarea:focus {
+outline: none;
+}
+
+.tabentry{
+border-bottom: 1px solid lightgray;
+width: 100%;
+resize: none;
+padding: 5px;
+}
+
+.tabentryx{
+cursor: pointer;
+border-bottom: 1px solid lightgray;
+width: 100%;
+resize: none;
+padding: 5px;
+}
+
+.tabentryy{
+cursor: pointer;
+border-bottom: 1px solid lightgray;
+
+resize: none;
+padding: 5px;
+background: #eee;
+border-top-left-radius: 10px;
+border-top-right-radius: 10px;
+border-bottom-right-radius: 10px;
+border-bottom-left-radius: 10px;
+
+-webkit-touch-callout: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+}
+
+button{
+padding:5px;
+}
+
+.text_textarea {
+box-sizing: border-box;
+-moz-box-sizing: border-box;
+-ms-box-sizing: border-box;
+-webkit-box-sizing: border-box;
+border: 1px solid lightgray;
+background: white;
+
+width: 100%;
+resize: none;
+padding: 5px;
+
+margin-bottom: 10px;
+}
+
+#footer{
+text-align: center;
+position:fixed;
+height:20px;
+background-color:lightgray;
+bottom:0px;
+left:0px;
+right:0px;
+margin-bottom:0px;
+padding-top:5px;
+visibility: hidden;
+}
+
+.hidden1 {
+opacity: 1;
+}
+
+.hidden2 {
+opacity: 0;
+-webkit-transition: opacity 5s linear;
+}
+</style>
+</head>
+
+<body style="padding-bottom:100px; min-width:500px; background: url('myapp:///back_base.png');">
+
+<p id="footer" style="" class="hidden2">
+</p>
+
+<script>
+var ani1 = null;
+var ani2 = null;
+function toast(was){
+	if(ani1 != null) clearTimeout(ani1);
+	if(ani2 != null) clearTimeout(ani2);
+	
+	document.getElementById('footer').innerHTML=was;
+	document.getElementById('footer').style.visibility="visible";
+	document.getElementById('footer').className = 'hidden1';
+	
+	ani1 = setTimeout(function() {
+		ani1 = null;
+	    document.getElementById('footer').className = 'hidden2';
+	}, 1000);
+	
+	ani2 = setTimeout(function() {
+		ani2 = null;
+	    document.getElementById('footer').style.visibility="hidden";
+	}, 5000);
+
+}
+</script>
+
+<script>
+function add(uuid){
+	document.getElementById('main').innerHTML=uuid;
+}
+
+ctr = 0;
+function addEntry(text){
+	ctr++;
+	document.getElementById('list').innerHTML='<p class="tabentry" id="uuid-uuuid12345" onclick="alert(theFunc(this.id))" >' + text + '</p>'
+	+ document.getElementById('list').innerHTML;
+}
+
+function addNote(){
+	len++;
+
+	var theid = getId(0);
+
+	data_id.push(theid);
+	data_content.push("");
+	
+	start(len);
+}
+
+
+var ctr = 0;
+</script>
+
+
+<div style="position: fixed; width: 99%; padding: 5px;">
+<div style="float: left;">
+<button type="button" onclick="newelem()">&nbsp;New&nbsp;</button>
+<button type="button" onclick="delelem(this)">Delete</button>
+</div>
+<div style="float: right;">
+<button type="button" onclick="save()">&nbsp;&nbsp;Save&nbsp;&nbsp;</button>
+<button type="button" onclick="addNote()">&nbsp;Add&nbsp;</button>
+</div>
+</div>
+
+<script>
+var ctrldown = false;
+
+document.onkeydown = function (event) { 
+	  if (event.keyCode == 17){
+		  ctrldown = true;
+		  event.returnValue=false;
+		  return false;
+	  }
+	  
+	  if(ctrldown){
+		  if (/*event.keyCode == 70 ||*/ event.keyCode == 80){
+			  event.keyCode = 0;
+			  return false;
+		  }
+	  }
+};
+	
+document.onkeyup = function (event) { 
+		  if (event.keyCode == 17){
+			  ctrldown = false;
+			  return;
+		  }
+};
+
+</script>
+
+<br><br><br>
+
+<div id="list" style=" position: fixed; overflow-x: hidden; overflow-y: auto; min-height: 500px; height: 75%;width: 25%;float: left; margin-right: 50px;margin-left: 5px;">
+</div>
+
+<div id="holder" style=" position: relative; margin-left: 10px;min-height: 500px;float:right; margin-bottom: 100px; margin-right: 20px; padding:2px;  border-radius: 2px; box-shadow: 0px 0px 20px 0px #999; border-collapse: separate; width: 70%;">
+<div id="cont" style="height: 99%; width: 99%; vertical-align:  bottom; display: table-cell; position: absolute; background: transparent; overflow-x: hidden;overflow-y: auto">
+<div id="texte" style="background: black; width: 100%; color: white; background: transparent; ">
+</div>
+</div>
+</div>
+<p id="numbers" style="float:right; position: absolute; width: 98%; text-align: right;bottom: 0px;margin-bottom: 7px; color: lightgray;">
+</p>
+
+<script type="text/javascript">
+var clickedelem = null;
+
+function clickListFromID(id, newelem, really){
+	clickList(document.getElementById(id), newelem, really);
+}
+
+function delAction(id){
+	try{
+		$("list").removeChild(document.getElementById(id));
+
+		if(clickedelem != null && id == clickedelem.id){
+			while(t.firstChild){
+				t.removeChild(t.firstChild);
+			}
+			
+			clickedelem = $("list").children[0];
+			clickedelem.className = "tabentryy";
+			
+			app.clickelem(clickedelem.id);
+			
+			data_id = new Array();
+			data_content = new Array();
+
+			start();
+		}
+	}
+	catch(e){
+		app.log(e.message);
+	}
+}
+
+
+function clickList(elem, newelem, really){
+	try{
+	
+	if(delmode && !newelem){
+		app.delokQ(elem.id);
+		return;
+	}
+	else{
+		if(clickedelem != null){
+			if(clickedelem.id == elem.id) return;
+		}
+		
+		if(data_id.length > 0 && !really){
+			app.reallyreload(elem.id);
+			return;
+		}
+	}
+	
+	if(clickedelem != null){
+		var tochooseelem = $(clickedelem.id);
+		if(tochooseelem != null) tochooseelem.className = "tabentryx";
+	}
+	
+	clickedelem = elem;
+	clickedelem.className = "tabentryy";
+
+	app.clickelem(elem.id);
+	
+	data_id = new Array();
+	data_content = new Array();
+
+	if(newelem)
+		start(1);
+	else
+		start();
+	
+	}
+	catch(e){
+		app.log(e.message);
+	}
+
+}
+
+function newelem(){
+	app.newelem();
+}
+
+var delmode = false;
+function delelem(button){
+	delmode = !delmode;
+	if(delmode)
+		button.style.color = "red";
+	else
+		button.style.color = "";
+}
+
+function save(){
+	app.startSave();
+	
+	for(var i=0; i<data_id.length; i++){
+		app.save(data_id[i], data_content[i]);
+	}
+	
+	data_id = new Array();
+	data_content = new Array();
+	
+	app.endSave();
+}
+
+
+
+function $(id){
+	return document.getElementById(id);
+}
+
+function setString(id, string){
+	$(id).innerHTML = string;
+}
+
+function addString(id, string){
+	$(id).innerHTML = string + $(id).innerHTML;
+	
+	initH();
+}
+
+function addString2(id, string){
+	var domscript = document.createElement('textarea');
+	domscript.innerHTML = string;
+	$(id).appendChild(domscript);
+}
+
+
+var theid;
+var fragment = document.createDocumentFragment();
+
+function addString3(id, string){
+	theid = id;
+	
+	var domscript = document.createElement('textarea');
+	domscript.innerHTML = string;
+	fragment.appendChild(domscript);
+}
+
+
+function finalizeString(){
+	$(theid).appendChild(fragment);
+}
+
+function start(alen){
+	while(t.firstChild){
+		t.removeChild(t.firstChild);
+	}
+	
+	if(alen)
+		len = alen
+	else
+		len = app.getLen();
+
+	avg = c.clientHeight;
+	t.style.height = (avg * (len)) + "px";
+	
+	$("numbers").innerHTML = len;
+	
+	add();
+	initH();
+	
+}
+
+window.onload = function() {
+	document.getElementById('holder').style.height = (window.innerHeight - 150) + 'px';
+	document.getElementById('list').style.height = (window.innerHeight - 130) + 'px';
+
+}
+
+window.onresize = function(event) {
+	document.getElementById('holder').style.height = (window.innerHeight - 150) + 'px';
+	document.getElementById('list').style.height = (window.innerHeight - 130) + 'px';
+	
+	len = app.getLen();
+	avg = c.clientHeight;
+	t.style.height = (avg * (len)) + "px";
+
+};
+</script>
+
+
+<script>
+var data_id = new Array();
+var data_content = new Array();
+
+var len = 0;
+
+function setLen(i){
+	len = i;
+}
+
+function get(i){
+	var theid = getId(i);
+	
+	if(data_id.indexOf(theid) < 0){
+		return app.extGet(theid);
+	}
+	return data_content[data_id.indexOf(theid)];
+}
+
+function $(id){
+	return document.getElementById(id);
+}
+
+
+///////////////
+var nokeys = [
+/*
+"PageUp",
+"PageDown",
+"End",
+"Home",
+"Left",
+"Up",
+"Right",
+"Down",
+"Tab",
+"Esc",
+91 = winkey
+*/
+
+36,
+35,
+33,
+34,
+38,
+37,
+40,
+39,
+9,
+17,
+18,
+27,
+91
+
+];
+
+
+keyupTimeout = false;
+keyupTimer = 0;
+
+function dos(e, elem, imm, noscroll){
+    var cooldownTimeout = 100;
+    
+    var ths = elem;
+    function heightCheck(){
+    	ascroll = c.scrollTop;
+    	if(noscroll) ascroll = -1;
+    	
+        keyupTimer = false;
+        ths.style.height = "";
+
+        var newheight = ths.scrollHeight + 20;
+        ths.style.height = newheight + "px";
+        
+   		if(ascroll >=0) c.scrollTop = ascroll;
+
+        if(!imm){
+        	var theid = getId(ths.id);
+        	
+        	if(data_id.indexOf(theid) < 0){
+    			data_id.push(theid);
+            	data_content.push(ths.value);
+        	}
+        	else{
+            	data_content[data_id.indexOf(theid)] = ths.value;
+        	}
+        }
+    }
+    
+    if(null != e) {
+    	   if (event.charCode) {
+    		      var charCode = event.charCode;
+    		   }
+    		   else {
+    		      var charCode = event.keyCode;
+    		   }
+
+        if(nokeys.indexOf(charCode) >= 0){
+    		return;
+        }
+    }
+    
+    if(imm || (null != e && charCode == 13)){
+    	heightCheck();
+    }
+    else{
+        if(keyupTimeout){
+            clearTimeout(keyupTimer);
+            keyUpTimer = setTimeout(heightCheck, cooldownTimeout);
+            return;
+        }
+
+        keyupTimer = setTimeout(heightCheck, cooldownTimeout);
+        keyupTimeout = true;
+    }
+}
+
+function dos_paste(e){
+	if(e === undefined || e == null) return;
+	
+	dos(null, e, false);
+}
+
+
+function initH(){
+	var elems = c.getElementsByTagName('textarea');
+	
+	var ctr = 0;
+	
+	for(var i=0; i<elems.length; i++){
+		dos(null, elems[i], true, false);
+		ctr += elems[i].clientHeight;
+	}
+	
+	if(t.childElementCount > 0) elems[0].focus();
+
+	return ctr;
+}
+
+
+</script>
+
+<script type="text/javascript">
+var marge = 10;
+
+function _top(elem){
+	if(typeof elem === 'object')
+		return elem.offsetTop;
+	else
+		return t.children[elem].offsetTop;
+}
+
+function _size(elem){
+	var retval = 0;
+	
+	if(typeof elem === 'object'){
+		retval = elem.offsetHeight + marge;
+	}
+	else{
+		retval = t.children[elem].offsetHeight + marge;
+	}
+	
+	return retval;
+}
+
+function _idx(elem){
+	if(typeof elem === 'object')
+		return parseInt(elem.id, 10);
+	else
+		if(t.children[elem] === undefined) {
+			app.log("ERRFH:" + elem);
+		}
+	return parseInt(t.children[elem].id, 10);
+}
+
+
+
+var t = $("texte");
+var c = $("cont");
+
+var avg = 0;
+
+function add(start_top, start_idx, height_start, elem0){
+	var start_i = 0;
+	var start_t = 0;
+	var start_h = 0;
+	var end_max = len;
+
+	if(start_idx){
+		start_i = Math.floor(start_idx);
+	}
+	
+	if(start_i < 0) return;
+	
+	if(start_top){
+		start_t = start_top;
+	}
+
+	if(height_start){
+		start_h = Math.floor(height_start);
+	}
+
+	var curheight = start_h;
+	
+	var i=start_i;
+	var running = true;
+
+	var tmptop = 0;
+
+	if(elem0 !== undefined){
+		if(i < 0) {
+			return;
+		}
+		else{
+			tmptop = _top(elem0);
+		}
+	}
+	else{
+		if(i>=end_max) return; 
+	}
+
+	while(running){
+		var domscript = document.createElement('textarea');
+		domscript.style.display = "inline-block";
+		domscript.style.width = "100%";
+		domscript.style.position = "relative";
+		domscript.value = get(i);
+		domscript.id = i;
+		domscript.className = "text_textarea";
+		domscript.onkeydown = function(event){dos(event, this, false);};
+		domscript.onpaste = function(event){dos_paste(this)};
+		domscript.style.resize = "none";
+		domscript.style.overflowX = "hidden";
+		domscript.style.overflowY = "auto";
+		domscript.style.maxHeight = avg + "px";
+
+		if(elem0 !== undefined){
+			t.insertBefore(domscript, t.children[0]);
+			dos(null, domscript, true, true);
+			i--;
+			if(i < 0) running = false;
+			tmptop = tmptop - _size(domscript);
+		}
+		else{
+			domscript.style.top = start_t + "px";
+			t.appendChild(domscript);
+			i++;
+			if(i>=end_max) running = false; 
+			dos(null, domscript, true, true);
+		}
+		
+		curheight += _size(domscript);
+		
+		if(curheight >  c.clientHeight)
+			break;
+	}
+	
+	if(elem0 !== undefined){
+		for(var i=0; i<t.childElementCount; i++){
+			t.children[i].style.top = tmptop + "px";
+		}
+	}
+}
+
+function getId(pos){
+	return len - 1 - parseInt(pos, 10);
+}
+
+function getPos(id){
+	return len - 1 - parseInt(id, 10);
+}
+
+c.onscroll = function(){
+	var num = Math.floor(c.scrollTop / avg);
+	var toppos = c.scrollTop;
+	
+	var l = t.children[t.childElementCount - 1];
+	if(l.id == len - 1 && toppos + c.clientHeight >= _top(l) + _size(l)){
+		c.scrollTop = _top(l) + _size(l) - c.clientHeight;
+		return;
+	}
+	else{
+		l = t.children[0];
+		if(l.id == 0 && toppos < _top(l)){
+			if(_top(l) != 0){
+				for(var i=0; i<t.childElementCount; i++){
+					t.children[i].style.top = "0px";
+				}
+				c.scrollTop = 0;
+			}
+			else{
+				c.scrollTop = _top(l);
+			}
+			return;
+		}
+	}
+
+	var found = -1;
+	for(var i=0; i<t.childElementCount; i++){
+		var e = t.children[i];
+		if(toppos >= _top(e) && toppos <= _top(e) + _size(e)){
+			found = i;
+			break;
+		}
+	}
+	
+	var noup = false;
+	if(found < 0){
+		noup = true;
+	}
+	
+	found = -1;
+	for(var i=0; i<t.childElementCount; i++){
+		var e = t.children[i];
+		if(toppos + c.clientHeight >= _top(e) && toppos + c.clientHeight <= _top(e) + _size(e)){
+			found = i;
+			break;
+		}
+	}
+
+	var nodown = false;
+	if(found < 0){
+		nodown = true;
+	}
+	
+	if(noup && nodown){
+		while(t.firstChild){
+			t.removeChild(t.firstChild);
+		}
+	
+		add(toppos, num);
+	}
+	else{
+		
+		if(nodown){
+			
+			add(_top(0), _idx(t.childElementCount-1) + 1,
+					_top(t.childElementCount-1) - toppos);
+			
+			var list = new Array();
+			for(var i=0; i<t.childElementCount; i++){
+				var e = t.children[i];
+				if(toppos > _top(e) + _size(e)){
+					list.push(i);
+				}
+			}
+
+			var newoffset = 0;
+			if(list.length > 0){
+				newoffset = t.children[list[list.length-1] + 1].offsetTop;
+				while(list.length > 0)
+					t.removeChild(t.children[list.pop()]);
+				
+				for(var i=0; i<t.childElementCount; i++){
+					t.children[i].style.top = newoffset + "px";
+				}
+			}
+		}
+		else if(noup){
+			add(0, _idx(0) - 1,
+					_top(0) - toppos, t.children[0]);
+			
+			var list = new Array();
+			for(var i=0; i<t.childElementCount; i++){
+				var e = t.children[i];
+				if(toppos + c.clientHeight < _top(e) ){
+					list.push(i);
+				}
+			}
+			
+			var newoffset = 0;
+			if(list.length > 0){
+				while(list.length > 0)
+					t.removeChild(t.children[list.pop()]);
+			}
+		}
+	}
+}
+
+</script>
+
+</body>
+</html>

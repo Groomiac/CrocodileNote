@@ -1,0 +1,28 @@
+CrocodileNote by Groomiac (https://groomiac.appspot.com)
+
+
+LICENSE
+
+This software is provided 'as-is', without any express or implied warranties
+or conditions of any kind.
+
+In no event will the author be held liable for any damages arising from
+the use of this software.
+
+Permission is granted to anyone to use this software for any purpose,
+subject to the following restriction: You may not distribute or redistribute
+this software without permission by Groomiac. 
+
+
+3RD-PARTY PRODUCTS
+
+The following 3rd-party software is used or embedded in compliance with
+their respective licenses (in alphabetical order).
+
+All trademarks and software are the property of their respective owners.
+
+ * Apache Commons Codec
+   http://commons.apache.org/codec/
+
+ * Java and the Java Runtime from Oracle (JRE embedded)
+   http://www.oracle.com/technetwork/java/javase/downloads/index.html
